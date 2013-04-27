@@ -1,4 +1,4 @@
-cs215-CPU-Scheduler
-===================
+CPU Scheduler Emulator
+======================
 
-A CPU Scheduler emulation in Java for CS215
+[Project Description](http://cs.clarku.edu/~fgreen/courses/cs215/CS215Assgn/CS215A5S13.html)
