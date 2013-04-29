@@ -4,42 +4,49 @@
  * This thread is used to demonstrate how the scheduler operates.
  * This thread runs forever, periodically displaying its name.
  *
- * @author Greg Gagne, Peter Galvin, Avi Silberschatz
- * @version 1.0 - July 15, 1999.
- * Copyright 2000 by Greg Gagne, Peter Galvin, Avi Silberschatz
- * Applied Operating Systems Concepts - John Wiley and Sons, Inc.
+ * @author Jasper Boyd and David Robinson
+ * @version 1.0
  */
 
-import java.util.*;
-
-class TestThread extends Thread
-{
+class TestThread extends Thread {
     private String name;
-    private Random r;
-    private int burstTime;
+    private int burst_time;
+    private int work_done;
 
-    public TestThread(String id, int burstTime) {
-        name = id;
-        r = new Random();
-        this.burstTime = burstTime;
-    }
+    public TestThread(String name, int burst_time) {
+        this.name = name;
+        this.burst_time = burst_time;
+    }//TestThread
 
+    /**
+     * @return String value containing the name of this instance
+     */
     public String toString () {
         return name;
-    }
+    }//TestThread
 
+    /**
+     * @return boolean value of whether the thread has finished its work
+     */
+    public boolean isFinished() {
+        return !(work_done < burstTime);
+    }//isFinished
+
+    /**
+     * This method has the thread do work until its burst time is finised
+     * @return void
+     */
     public void run() {
-        /* 
-         * The thread does something
-         **/
-        while (true) {
-            for (int i = 0; i < burstTime; i++)
-                try {
-                    //Prevent overusing CPU by sleeping briefly
-                    Thread.sleep(10);
-                } catch (InterruptedException e) 
-                {}
-            ;
-        }
-    }
-}
+        while(work_done < burstTime) {
+            try {
+                //Prevent overusing CPU by sleeping briefly
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }//try
+
+            work_done++;
+        }//while
+    }//run
+
+}//TestThread
