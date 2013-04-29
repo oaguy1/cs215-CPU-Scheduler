@@ -13,6 +13,13 @@ class TestThread extends Thread {
     private int burst_time;
     private int work_done;
 
+    /**
+     * Basic constructor that allows user to input a desired name and
+     * time burst for thread
+     * @param name The desired name for this instance of TestThread
+     * @param bust_time The desired burst time for this instance of TestThread
+     * @return TestThread object
+     */
     public TestThread(String name, int burst_time) {
         this.name = name;
         this.burst_time = burst_time;
