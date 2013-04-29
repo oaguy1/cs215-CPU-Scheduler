@@ -40,6 +40,14 @@ class TestThread extends Thread {
     }//isFinished
 
     /**
+     * Reset the work done by this thread
+     * @return void
+     */
+    public void resetWork() {
+        work_done = 0;
+    }//resetWork
+
+    /**
      * This method has the thread do work until its burst time is finised
      * @return void
      */
