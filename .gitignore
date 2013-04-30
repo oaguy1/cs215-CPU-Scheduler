@@ -4,3 +4,9 @@
 *.jar
 *.war
 *.ear
+
+# Vim Swap Files #
+*.swp
+
+# Mac OS X Bullsh*t #
+*.DS_Store

@@ -28,7 +28,7 @@ public class ThreadQueue extends Thread{
      * @param time_quantum int value representing the desired time quantum
      * @return void
      */
-    public ThreadQueue(int time_quantum, int time_slice) {
+    public ThreadQueue(int time_quantum) {
         this.time_quantum = time_quantum;
         queue = new LinkedList<TestThread>();
     }//ThreadQueue

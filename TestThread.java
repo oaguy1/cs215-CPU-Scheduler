@@ -35,7 +35,7 @@ class TestThread extends Thread {
     /**
      * @return boolean value of whether the thread has finished its work
      */
-    public boolean isFinished() {
+    public boolean isDone() {
         return !(work_done < burstTime);
     }//isFinished
 
@@ -43,7 +43,7 @@ class TestThread extends Thread {
      * Reset the work done by this thread
      * @return void
      */
-    public void resetWork() {
+    public void reset() {
         work_done = 0;
     }//resetWork
 
@@ -62,6 +62,8 @@ class TestThread extends Thread {
 
             work_done++;
         }//while
+
+        Thread.notifyAll();
     }//run
 
 }//TestThread
