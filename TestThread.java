@@ -1,64 +1,69 @@
-package cpuscheduler;
-
 /**
  * TestThread.java
  * 
- * 
+ * This thread is used to demonstrate how the scheduler operates.
+ * This thread runs forever, periodically displaying its name.
+ *
+ * @author Jasper Boyd and David Robinson
+ * @version 1.0
  */
 
-import java.util.*;
+class TestThread extends Thread {
+    private String name;
+    private int burst_time;
+    private int work_done;
 
-class TestThread extends Thread
-{
-    private Scheduler sched; 
-    private int number;
-    private Random r;
-    private int burstTime;
-    
-    public TestThread(int n, Scheduler s){ 
-        this.sched = s; 
-        this.number = n; 
-        this.r = new Random(); 
-        this.burstTime = calcBT();
-    }
+    /**
+     * Basic constructor that allows user to input a desired name and
+     * time burst for thread
+     * @param name The desired name for this instance of TestThread
+     * @param bust_time The desired burst time for this instance of TestThread
+     * @return TestThread object
+     */
+    public TestThread(String name, int burst_time) {
+        this.name = name;
+        this.burst_time = burst_time;
+    }//TestThread
 
+    /**
+     * @return String value containing the name of this instance
+     */
+    public String toString () {
+        return name;
+    }//TestThread
+
+    /**
+     * @return boolean value of whether the thread has finished its work
+     */
+    public boolean isDone() {
+        return !(work_done < burstTime);
+    }//isFinished
+
+    /**
+     * Reset the work done by this thread
+     * @return void
+     */
+    public void reset() {
+        work_done = 0;
+    }//resetWork
+
+    /**
+     * This method has the thread do work until its burst time is finised
+     * @return void
+     */
     public void run() {
-        /* 
-         * The thread does something
-         **/
-        while (true) {
-            for (int i = 0; i < burstTime; i++) {
-                try {
-                    //Prevent overusing CPU by sleeping briefly
-                    Thread.sleep(10);
-                } catch (InterruptedException e) 
-                {}
-            }
-            synchronized(sched)
-            {
-              sched.notify();
-            };
-        }
-    }
-    
-    private int calcBT(){
-        double answer; 
-        int q = 100 - r.nextInt(50); 
-        
-        switch (this.number){
-            case 1: 
-                answer = q * 1.4; 
-                break; 
-            case 2: 
-                answer = 2 * q * 1.4; 
-                break; 
-            case 3: 
-                answer = 4 * q * 1.4; 
-                break; 
-            default://impossible case for compiler
-                answer = q;
-        }
-        
-        return (int) answer; 
-    }
-}
+        while(work_done < burstTime) {
+            try {
+                //Prevent overusing CPU by sleeping briefly
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }//try
+
+            work_done++;
+        }//while
+
+        Thread.notifyAll();
+    }//run
+
+}//TestThread

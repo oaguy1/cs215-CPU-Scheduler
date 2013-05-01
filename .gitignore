@@ -4,5 +4,8 @@
 *.jar
 *.war
 *.ear
+<<<<<<< HEAD
 
 .DS_Store
+=======
+>>>>>>> parent of 0d322b8... Minor clean-up
