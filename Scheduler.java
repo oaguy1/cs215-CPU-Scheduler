@@ -21,23 +21,26 @@ public class Scheduler extends Thread {
     private int count_0;
     private int count_1;
     private int count_2;
+    private boolean sleeping; 
     private static final int DEFAULT_TIME_SLICE = 500; // 1/2 second
     private static final int QUEUE_ZERO_SLICES = 1;
     private static final int QUEUE_ONE_SLICES = 4;
     private static final int QUEUE_TWO_SLICES = 8;
 
     public Scheduler() {
-        timeSlice = DEFAULT_TIME_SLICE;
-        queue_0 = new ThreadQueue();
-        queue_1 = new ThreadQueue();
-        queue_2 = new ThreadQueue();
+        this.timeSlice = DEFAULT_TIME_SLICE;
+        this.queue_0 = new ThreadQueue();
+        this.queue_1 = new ThreadQueue();
+        this.queue_2 = new ThreadQueue();
+        this.sleeping = false; 
     }//Scheduler
 
     public Scheduler(int quantum) {
-        timeSlice = quantum;
-        queue_0 = new ThreadQueue();
-        queue_1 = new ThreadQueue();
-        queue_2 = new ThreadQueue();
+        this.timeSlice = quantum;
+        this.queue_0 = new ThreadQueue();
+        this.queue_1 = new ThreadQueue();
+        this.queue_2 = new ThreadQueue();
+        this.sleeping = false;
     }//Scheduler
 
     /**
@@ -66,21 +69,26 @@ public class Scheduler extends Thread {
      */
     private void schedulerSleep() {
         try {
-            Thread.sleep(timeSlice);
+            synchronized(this)
+            {
+                  sleeping = true;
+                  wait(timeSlice);
+                  sleeping = false;
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }//try
     }//schedulerSleep
 
+
     public void run() {
         TestThread current;
 
-        // set the priority of the scheduler to the highest priority
-        this.setPriority(6);
+        this.setPriority(Thread.MAX_PRIORITY);
 
         while (!queue_0.isEmpty() || !queue_1.isEmpty() || !queue_2.isEmpty()) {
             try {
-                
+         
                 if(count_0 < 4) {
                     current = (TestThread)queue_0.getNext();
                     count_0++;

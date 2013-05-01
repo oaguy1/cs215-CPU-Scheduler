@@ -11,6 +11,7 @@ package cpuscheduler;
  */
 
 class TestThread extends Thread {
+    private Scheduler sched;
     private String name;
     private int burstTime;
     private int workDone;
@@ -22,9 +23,10 @@ class TestThread extends Thread {
      * @param bust_time The desired burst time for this instance of TestThread
      * @return TestThread object
      */
-    public TestThread(String name, int burst_time) {
-        this.name = name;
-        this.burstTime = burstTime;
+    public TestThread(String n, int bt, Scheduler s) {
+        this.name = n;
+        this.burstTime = bt;
+        this.sched = s; 
     }//TestThread
 
     /**
@@ -64,8 +66,10 @@ class TestThread extends Thread {
 
             workDone++;
         }//while
-
-        this.notifyAll();
+       
+        synchronized(this.sched) {
+            this.sched.notify();
+        }
     }//run
 
 }//TestThread
