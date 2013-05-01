@@ -1,3 +1,5 @@
+package cpuscheduler;
+
 /**
  * Scheduler.java
  *
@@ -42,7 +44,7 @@ public class Scheduler extends Thread {
      * adds a thread to the queue
      * @return void
      */
-    public void addThread(int queue,Thread t) {
+    public void addThread(int queue, TestThread t) throws InterruptedException {
         switch(queue) {
             case 0:
                 queue_0.add(t);
@@ -54,7 +56,7 @@ public class Scheduler extends Thread {
                 queue_2.add(t);
                 break;
             default:
-                System.err.println("Invalid queueu number " + queue);
+                System.err.println("Invalid queue number " + queue);
         }//switch
     }//addThread
 

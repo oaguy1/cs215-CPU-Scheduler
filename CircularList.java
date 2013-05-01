@@ -1,3 +1,5 @@
+package cpuscheduler;
+
 /**
  * CircularList.java
  *
@@ -54,15 +56,4 @@ public class CircularList
         List.addElement(t);      
     }//addItem
 
-    /**
-     * this method prints the contect of the list
-     * @return void
-     */
-    public void printList() {
-        for(Object i : List.iterator()) {
-            System.out.print(i.toString() + " ");
-        }//for
-
-        System.out.println();
-    }//printList
 }//CircularList

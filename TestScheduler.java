@@ -1,3 +1,5 @@
+package cpuscheduler;
+
 /**
  * TestScheduler.java
  *
@@ -12,7 +14,7 @@
 
 public class TestScheduler  
 {
-    public static void main(String args[]) {
+    public static void main(String args[]) throws InterruptedException {
         /**
          * This must run at the highest priority to ensure that
          * it can create the scheduler and the example threads.
@@ -26,15 +28,15 @@ public class TestScheduler
 
         TestThread t1 = new TestThread("Thread 1", 200);
         t1.start();
-        CPUScheduler.addThread(t1);
+        CPUScheduler.addThread(0, t1);
 
         TestThread t2 = new TestThread("Thread 2", 80);
         t2.start();
-        CPUScheduler.addThread(t2);
+        CPUScheduler.addThread(1, t2);
 
         TestThread t3 = new TestThread("Thread 3", 150);
         t3.start();
-        CPUScheduler.addThread(t3);
+        CPUScheduler.addThread(2, t3);
 
         CPUScheduler.start();
 

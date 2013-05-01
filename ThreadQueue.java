@@ -1,3 +1,5 @@
+package cpuscheduler;
+
 /**
  * This class represents the ThreadQueue abstract data type.
  * It creates a queue that holds Java Threads and lets them execute for a 
@@ -10,6 +12,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 
 public class ThreadQueue extends Thread{
+    private int size; 
     private int time_quantum;
     private Queue<TestThread> queue;
     private final int DEFAULT_TIME_SLICE = 500;
@@ -18,6 +21,7 @@ public class ThreadQueue extends Thread{
      * Default constructor for ThreadQueue class
      */
     public ThreadQueue() {
+        size = 0; 
         time_quantum = 1;
         queue = new LinkedList<TestThread>();
     }//ThreadQueue
@@ -38,23 +42,39 @@ public class ThreadQueue extends Thread{
      * @param thread The TestThread object to be added to the queue
      * @return void
      */
-    public void add(TestThread thread) {
-        thread.wait();
+    public void add(TestThread thread) throws InterruptedException {
+        size++; 
+        thread.wait(time_quantum);
         thread.reset();
         queue.add(thread);
     }//add
+    
+    public boolean isEmpty(){ 
+        return size > 0; 
+    }
 
+    //ITERATOR DOESN"T LIKE THE COMPILER
     /**
      * This method prints out the contents of the queue
      * @return void
      */
-    public void printQueue() {
+    /*public void printQueue() {
         for(TestThread i : queue.iterator()) {
             System.out.print(i + " ");
         }//for
 
         System.out.println();
-    }//printQueue
+    }//printQueue*/
+    
+    /**
+     * 
+     * 
+     */
+    public TestThread getNext(){
+        TestThread answer; 
+        
+        return answer; 
+    }
 
     /**
      * Queue lets each TestThread run for a time quantum before preempting it
@@ -66,7 +86,7 @@ public class ThreadQueue extends Thread{
         TestThread current;
 
         while(true) {
-            
+            try {
             while(!queue.isEmpty()) {
                 current = queue.remove();
                 current.signal();
@@ -79,6 +99,8 @@ public class ThreadQueue extends Thread{
                     
                 queue.add(current);
             }//while
+            } catch (InterruptedException e)
+            {}//try/catch
 
         }//while
     }//run

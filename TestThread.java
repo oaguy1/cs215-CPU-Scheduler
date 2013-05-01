@@ -1,3 +1,5 @@
+package cpuscheduler;
+
 /**
  * TestThread.java
  * 
@@ -10,8 +12,8 @@
 
 class TestThread extends Thread {
     private String name;
-    private int burst_time;
-    private int work_done;
+    private int burstTime;
+    private int workDone;
 
     /**
      * Basic constructor that allows user to input a desired name and
@@ -22,7 +24,7 @@ class TestThread extends Thread {
      */
     public TestThread(String name, int burst_time) {
         this.name = name;
-        this.burst_time = burst_time;
+        this.burstTime = burstTime;
     }//TestThread
 
     /**
@@ -36,7 +38,7 @@ class TestThread extends Thread {
      * @return boolean value of whether the thread has finished its work
      */
     public boolean isDone() {
-        return !(work_done < burstTime);
+        return !(workDone < burstTime);
     }//isFinished
 
     /**
@@ -44,7 +46,7 @@ class TestThread extends Thread {
      * @return void
      */
     public void reset() {
-        work_done = 0;
+        workDone = 0;
     }//resetWork
 
     /**
@@ -52,7 +54,7 @@ class TestThread extends Thread {
      * @return void
      */
     public void run() {
-        while(work_done < burstTime) {
+        while(workDone < burstTime) {
             try {
                 //Prevent overusing CPU by sleeping briefly
                 Thread.sleep(10);
@@ -60,10 +62,10 @@ class TestThread extends Thread {
                 e.printStackTrace();
             }//try
 
-            work_done++;
+            workDone++;
         }//while
 
-        Thread.notifyAll();
+        this.notifyAll();
     }//run
 
 }//TestThread
