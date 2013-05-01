@@ -1,16 +1,13 @@
+package cpuscheduler;
+
+import java.util.Random;
+
 /**
  * TestScheduler.java
  *
- * This program demonstrates how the scheduler operates.
- * This creates the scheduler and then the three example threads.
- *
- * @author Greg Gagne, Peter Galvin, Avi Silberschatz
- * @version 1.0 - July 15, 1999.
- * Copyright 2000 by Greg Gagne, Peter Galvin, Avi Silberschatz
- * Applied Operating Systems Concepts - John Wiley and Sons, Inc.
  */
 
-public class TestScheduler  
+public class TestScheduler
 {
     public static void main(String args[]) {
         /**
@@ -24,15 +21,15 @@ public class TestScheduler
 
         Scheduler CPUScheduler = new Scheduler();
 
-        TestThread t1 = new TestThread("Thread 1", 200);
+        TestThread t1 = new TestThread(1, CPUScheduler);
         t1.start();
         CPUScheduler.addThread(t1);
 
-        TestThread t2 = new TestThread("Thread 2", 80);
+        TestThread t2 = new TestThread(2, CPUScheduler);
         t2.start();
         CPUScheduler.addThread(t2);
 
-        TestThread t3 = new TestThread("Thread 3", 150);
+        TestThread t3 = new TestThread(3, CPUScheduler);
         t3.start();
         CPUScheduler.addThread(t3);
 
