@@ -1,5 +1,3 @@
-package cpuscheduler;
-
 /**
  * This class represents the ThreadQueue abstract data type. It creates a queue
  * that holds Java Threads and lets them execute for a predefined time quantum.
@@ -7,6 +5,7 @@ package cpuscheduler;
  * @author Jasper Boyd and David Robinson
  * @version 1.0
  */
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +52,7 @@ public class ThreadQueue extends Thread {
             thread.wait(timeQuantum);
         }
         queue.add(thread);
+        updateGUI();
     }//add
 
     public boolean isEmpty() {
@@ -97,6 +97,20 @@ public class ThreadQueue extends Thread {
         return queue.pollFirst();
     }
 
+    private void updateGUI() {
+        Iterator queue_iterator = queue.iterator();
+
+        for(int i = 0; i < 6; i++) {
+            if(queue_interator.hasNext()) {
+                CPUSchedulerGUI.setQueueLabel(this.name, i, 
+                        queue_iterator.getNext().toString());
+            } else {
+                CPUSchedulerGUI.setQueueLabel(this.name, i, "");
+            }//if
+        }//for
+
+    }//updateGUI
+
     /**
      * Queue lets each TestThread run for a time quantum before preempting it
      * with the next item in the queue. Once an item has finished executing, it
@@ -116,8 +130,13 @@ public class ThreadQueue extends Thread {
                 while (!queue.isEmpty()) {
                     currentThread = queue.remove();
 
-                    System.out.println("Dispatching " + currentThread.toString() + " from Queue: " + this.name);
+                    this.updateGUI();
+
+                    System.out.println("Dispatching " + currentThread.toString() 
+                            + " from Queue: " + this.name);
                     System.out.println("Burst Time: " + currentThread.burstTime());
+
+                    CPUSchedulerGUI.setCurrentExe(currentThread.toString());
 
                     synchronized (currentThread) {
                         currentThread.notify();
@@ -136,6 +155,7 @@ public class ThreadQueue extends Thread {
                         
                     } else { 
                         queue.add(currentThread);
+                        updateGUI();
                     }
                 }//while
             } catch (InterruptedException e) {

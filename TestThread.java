@@ -1,5 +1,3 @@
-package cpuscheduler;
-
 import java.util.*; 
 
 /**

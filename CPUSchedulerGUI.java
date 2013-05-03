@@ -166,16 +166,68 @@ public class CPUSchedulerGUI extends JFrame {
         pack();
     }//initComponents
 
-    public void startScheduler(java.awt.event.ActionEvent event) {
+    private void startScheduler(java.awt.event.ActionEvent event) {
         //do stuff
     }//startScheduler
 
-    public static void main(String[] args) {
+    public static void setQueueLabel(int queue, int index, String new_label) {
+        JLabel[] current_queue;
+
+        System.out.println("Set Queue " + queue + " Label");
+
+        switch(queue) {
+            case 0:
+                current_queue = queue0_blocks;
+                break;
+            case 1:
+                current_queue = queue1_blocks;
+                break;
+            case 2:
+                current_queue = queue2_blocks;
+                break;
+            default:
+                System.err.println("No such queue number");
+                return;
+        }//switch
+
+        current_queue[index].setText(new_label);
+    }//setQueueLabel
+
+    public static void setCurrentExe(String new_label) {
+        current_exe_label.setText(new_label);
+    }//setCurrentExe
+
+    public static void main(String[] args) throws InterruptedException {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new CPUSchedulerGUI().setVisible(true);
             }
         });
+
+        /**
+         * This must run at the highest priority to ensure that
+         * it can create the scheduler and the example threads.
+         * If it did not run at the highest priority, it is possible
+         * that the scheduler could preempt this and not allow it to
+         * create the example threads.
+         */
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
+        Scheduler CPUScheduler = new Scheduler();
+
+        TestThread t1 = new TestThread(1); 
+        t1.start(); 
+        CPUScheduler.addThread(t1);
+
+        TestThread t2 = new TestThread(2);
+        t2.start(); 
+        CPUScheduler.addThread(t2);
+
+        TestThread t3 = new TestThread(3);
+        t3.start();
+        CPUScheduler.addThread(t3);
+
+        CPUScheduler.start();
     }//main
 
 }//CPUSchedulerGUI
