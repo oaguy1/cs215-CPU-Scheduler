@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.border.Border;
@@ -6,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.TitledBorder;
 
 public class CPUSchedulerGUI extends JFrame {
+
     private static JLabel current_exe, current_exe_label;
     private static JLabel queue0_blocks[];
     private static JLabel queue1_blocks[];
@@ -30,21 +33,21 @@ public class CPUSchedulerGUI extends JFrame {
         //construct queue 0
         queue0 = new JPanel();
         queue0_blocks = new JLabel[6];
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             queue0_blocks[i] = new JLabel("", JLabel.CENTER);
         }//for
 
         //construct queue 1
         queue1 = new JPanel();
         queue1_blocks = new JLabel[6];
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             queue1_blocks[i] = new JLabel("", JLabel.CENTER);
         }//for
 
         //construct queue 2
         queue2 = new JPanel();
         queue2_blocks = new JLabel[6];
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             queue2_blocks[i] = new JLabel("", JLabel.CENTER);
         }//for
 
@@ -66,17 +69,15 @@ public class CPUSchedulerGUI extends JFrame {
                 .addComponent(queue0)
                 .addComponent(queue1)
                 .addComponent(queue2)
-                .addComponent(control)
-                );
+                .addComponent(control));
         root_layout.setHorizontalGroup(
                 root_layout.createSequentialGroup()
                 .addGroup(root_layout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addComponent(current)
-                    .addComponent(queue0)
-                    .addComponent(queue1)
-                    .addComponent(queue2)
-                    .addComponent(control))
-                );
+                .addComponent(current)
+                .addComponent(queue0)
+                .addComponent(queue1)
+                .addComponent(queue2)
+                .addComponent(control)));
 
         //layout currently executing thread
         current.add(current_exe_label);
@@ -88,7 +89,7 @@ public class CPUSchedulerGUI extends JFrame {
         queue0.setBorder(BorderFactory.createTitledBorder("Queue 0"));
         queue0.add(queue0_blocks[0]);
         queue0_blocks[0].setBorder(blackline);
-        queue0_blocks[0].setPreferredSize(new Dimension(100, 20)); 
+        queue0_blocks[0].setPreferredSize(new Dimension(100, 20));
         queue0.add(queue0_blocks[1]);
         queue0_blocks[1].setBorder(blackline);
         queue0_blocks[1].setPreferredSize(new Dimension(100, 20));
@@ -109,7 +110,7 @@ public class CPUSchedulerGUI extends JFrame {
         queue1.setBorder(BorderFactory.createTitledBorder("Queue 1"));
         queue1.add(queue1_blocks[0]);
         queue1_blocks[0].setBorder(blackline);
-        queue1_blocks[0].setPreferredSize(new Dimension(100, 20)); 
+        queue1_blocks[0].setPreferredSize(new Dimension(100, 20));
         queue1.add(queue1_blocks[1]);
         queue1_blocks[1].setBorder(blackline);
         queue1_blocks[1].setPreferredSize(new Dimension(100, 20));
@@ -130,7 +131,7 @@ public class CPUSchedulerGUI extends JFrame {
         queue2.setBorder(BorderFactory.createTitledBorder("Queue 2"));
         queue2.add(queue2_blocks[0]);
         queue2_blocks[0].setBorder(blackline);
-        queue2_blocks[0].setPreferredSize(new Dimension(100, 20)); 
+        queue2_blocks[0].setPreferredSize(new Dimension(100, 20));
         queue2.add(queue2_blocks[1]);
         queue2_blocks[1].setBorder(blackline);
         queue2_blocks[1].setPreferredSize(new Dimension(100, 20));
@@ -154,7 +155,7 @@ public class CPUSchedulerGUI extends JFrame {
         //register event handlers for buttons
         start.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent event) {
-               startScheduler(event); 
+                startScheduler(event);
             }//actionPerformed
         });
         quit.addActionListener(new java.awt.event.ActionListener() {
@@ -175,7 +176,7 @@ public class CPUSchedulerGUI extends JFrame {
 
         System.out.println("Set Queue " + queue + " Label");
 
-        switch(queue) {
+        switch (queue) {
             case 0:
                 current_queue = queue0_blocks;
                 break;
@@ -198,36 +199,33 @@ public class CPUSchedulerGUI extends JFrame {
     }//setCurrentExe
 
     public static void main(String[] args) throws InterruptedException {
+
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CPUSchedulerGUI().setVisible(true);
+                try {
+                    new CPUSchedulerGUI().setVisible(true);
+                    Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
+                    Scheduler CPUScheduler = new Scheduler();
+
+                    TestThread t1 = new TestThread(1);
+                    t1.start();
+                    CPUScheduler.addThread(t1);
+
+                    TestThread t2 = new TestThread(2);
+                    t2.start();
+                    CPUScheduler.addThread(t2);
+
+                    TestThread t3 = new TestThread(3);
+                    t3.start();
+                    CPUScheduler.addThread(t3);
+
+                    CPUScheduler.start();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(CPUSchedulerGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
-
-        /**
-         * This must run at the highest priority to ensure that
-         * it can create the scheduler and the example threads.
-         * If it did not run at the highest priority, it is possible
-         * that the scheduler could preempt this and not allow it to
-         * create the example threads.
-         */
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-
-        Scheduler CPUScheduler = new Scheduler();
-
-        TestThread t1 = new TestThread(1); 
-        t1.start(); 
-        CPUScheduler.addThread(t1);
-
-        TestThread t2 = new TestThread(2);
-        t2.start(); 
-        CPUScheduler.addThread(t2);
-
-        TestThread t3 = new TestThread(3);
-        t3.start();
-        CPUScheduler.addThread(t3);
-
-        CPUScheduler.start();
     }//main
-
 }//CPUSchedulerGUI
