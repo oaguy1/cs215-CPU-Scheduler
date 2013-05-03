@@ -12,8 +12,8 @@ package cpuscheduler;
  * Applied Operating Systems Concepts - John Wiley and Sons, Inc.
  */
 
-public class TestScheduler  
-{
+public class TestScheduler {
+    
     public static void main(String args[]) throws InterruptedException {
         /**
          * This must run at the highest priority to ensure that
@@ -26,17 +26,17 @@ public class TestScheduler
 
         Scheduler CPUScheduler = new Scheduler();
 
-        TestThread t1 = new TestThread("Thread 1", 200, CPUScheduler);
-        t1.start();
-        CPUScheduler.addThread(0, t1);
+        TestThread t1 = new TestThread(1); 
+        t1.start(); 
+        CPUScheduler.addThread(t1);
 
-        TestThread t2 = new TestThread("Thread 2", 80, CPUScheduler);
-        t2.start();
-        CPUScheduler.addThread(1, t2);
+        TestThread t2 = new TestThread(2);
+        t2.start(); 
+        CPUScheduler.addThread(t2);
 
-        TestThread t3 = new TestThread("Thread 3", 150, CPUScheduler);
+        TestThread t3 = new TestThread(3);
         t3.start();
-        CPUScheduler.addThread(2, t3);
+        CPUScheduler.addThread(t3);
 
         CPUScheduler.start();
     }
