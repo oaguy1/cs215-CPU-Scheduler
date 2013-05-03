@@ -101,9 +101,8 @@ public class ThreadQueue extends Thread {
         Iterator queue_iterator = queue.iterator();
 
         for(int i = 0; i < 6; i++) {
-            if(queue_interator.hasNext()) {
-                CPUSchedulerGUI.setQueueLabel(this.name, i, 
-                        queue_iterator.getNext().toString());
+            if(queue_iterator.hasNext()) {
+                CPUSchedulerGUI.setQueueLabel(this.name, i, queue_iterator.next().toString());
             } else {
                 CPUSchedulerGUI.setQueueLabel(this.name, i, "");
             }//if
