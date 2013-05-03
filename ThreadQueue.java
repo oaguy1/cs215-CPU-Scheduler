@@ -116,7 +116,7 @@ public class ThreadQueue extends Thread {
                 while (!queue.isEmpty()) {
                     currentThread = queue.remove();
 
-                    System.out.println("Dispatching Thread: " + currentThread.name() + " from Queue: " + this.name);
+                    System.out.println("Dispatching " + currentThread.toString() + " from Queue: " + this.name);
                     System.out.println("Burst Time: " + currentThread.burstTime());
 
                     synchronized (currentThread) {
@@ -132,8 +132,8 @@ public class ThreadQueue extends Thread {
                     } 
 
                     if (currentThread.isDone()) {
-                        System.out.println ("Completing Thread: " + currentThread.name()); 
-                        TestThread temp = new TestThread (currentThread.getName());
+                        System.out.println ("Completing " + currentThread.toString()); 
+                        TestThread temp = new TestThread (currentThread.number() + 1);
                         queue.add(temp); 
                         temp.start();
                     } else { 

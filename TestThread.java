@@ -11,10 +11,10 @@ import java.util.*;
  * @author Jasper Boyd and David Robinson
  * @version 1.0
  */
-class TestThread extends Thread {
+public class TestThread extends Thread {
     private Random r; 
     private boolean sleeping;
-    private String name;
+    private int number; 
     private int burstTime;
     private int workDone;
     private static final int DEFAULT_BURST = 500;
@@ -29,9 +29,9 @@ class TestThread extends Thread {
      * @param bust_time The desired burst time for this instance of TestThread
      * @return TestThread object
      */
-    public TestThread(String n) {
+    public TestThread(int n) {
         r = new Random(); 
-        this.name = n;
+        this.number = n;
         this.burstTime = genBurstTime();
         sleeping = false;   
     }//TestThread
@@ -82,15 +82,15 @@ class TestThread extends Thread {
      * @return String value containing the name of this instance
      */
     public String toString() {
-        return name;
+        return "Thread " + number;
     }//TestThread
     
     public int burstTime(){ 
         return burstTime; 
     }
 
-    public String name() {
-        return name;
+    public int number() { 
+        return number; 
     }
 
     public boolean sleeping() {
@@ -118,7 +118,7 @@ class TestThread extends Thread {
      * @return void
      */
     public synchronized void reset() {
-        System.out.println("resetting thread: " + this.name());
+        System.out.println("resetting " + this.toString());
         workDone = 0;
         burstTime = genBurstTime();
     }//resetWork
