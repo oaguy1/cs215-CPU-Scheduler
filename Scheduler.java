@@ -1,5 +1,8 @@
 package cpuscheduler;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Scheduler.java
  *
@@ -28,19 +31,25 @@ public class Scheduler extends Thread {
     private static final int QUEUE_TWO_SLICES = 8;
 
     public Scheduler() {
-        this.timeSlice = DEFAULT_TIME_SLICE;
-        this.queue_0 = new ThreadQueue();
-        this.queue_1 = new ThreadQueue();
-        this.queue_2 = new ThreadQueue();
-        this.sleeping = false; 
+        timeSlice = DEFAULT_TIME_SLICE;
+        queue_0 = new ThreadQueue(0, QUEUE_ZERO_SLICES);
+        queue_1 = new ThreadQueue(1, QUEUE_ONE_SLICES);
+        queue_2 = new ThreadQueue(2, QUEUE_TWO_SLICES);
+        queue_0.start(); 
+        queue_1.start(); 
+        queue_2.start(); 
+        sleeping = false; 
     }//Scheduler
 
     public Scheduler(int quantum) {
-        this.timeSlice = quantum;
-        this.queue_0 = new ThreadQueue();
-        this.queue_1 = new ThreadQueue();
-        this.queue_2 = new ThreadQueue();
-        this.sleeping = false;
+        timeSlice = quantum;
+        queue_0 = new ThreadQueue(0, QUEUE_ZERO_SLICES);
+        queue_1 = new ThreadQueue(1, QUEUE_ONE_SLICES);
+        queue_2 = new ThreadQueue(2, QUEUE_TWO_SLICES);
+        queue_0.start(); 
+        queue_1.start(); 
+        queue_2.start(); 
+        sleeping = false;
     }//Scheduler
 
     /**
@@ -82,46 +91,40 @@ public class Scheduler extends Thread {
 
 
     public void run() {
-        TestThread current;
+        ThreadQueue currentQueue;
 
         this.setPriority(Thread.MAX_PRIORITY);
 
         while (!queue_0.isEmpty() || !queue_1.isEmpty() || !queue_2.isEmpty()) {
             try {
-         
                 if(count_0 < 4) {
-                    current = (TestThread)queue_0.getNext();
+                    currentQueue = queue_0; 
                     count_0++;
                 } else if(count_1 < 4) {
-                    current = (TestThread)queue_1.getNext();
+                    currentQueue = queue_1;
                     count_1++;
                     if(count_1 != 4) {
                         count_0 = 0;
                     }//if
                 } else if(count_2 < 4) {
-                    current = (TestThread)queue_2.getNext();
+                    currentQueue = queue_2;
                     count_2++;
                     if(count_2 != 4) {
                         count_1 = 0;
                     }//if
                 } else {
-                    current = (TestThread)queue_0.getNext();
+                    currentQueue = queue_0;
                     count_0 = 1;
                     count_1 = 0;
                     count_2 = 0;
                 }//if
-
-                if ( (current != null) && (current.isAlive()) ) {
-                    System.out.println(" dispatching " + current);
-                    current.setPriority(4);
-
-                    schedulerSleep();
-
-                    System.out.print("* * * Context Switch * * * ");
-                    System.out.println(" preempting " + current);
-
-                    current.setPriority(2);
-                }//if
+                
+                synchronized(currentQueue){ 
+                    currentQueue.notify();
+                }
+                
+                
+                schedulerSleep();
 
             } catch (NullPointerException e3) { 
                 e3.printStackTrace();
