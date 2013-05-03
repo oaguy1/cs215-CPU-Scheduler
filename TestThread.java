@@ -37,7 +37,7 @@ public class TestThread extends Thread {
     }//TestThread
     
     private int genBurstTime(){ 
-        int selector = r.nextInt(10); 
+        int selector = r.nextInt(20); 
         switch (selector){
             case 0: 
                 return calcLargeBurst(); 
@@ -123,6 +123,7 @@ public class TestThread extends Thread {
         burstTime = genBurstTime();
     }//resetWork
 
+   
     /**
      * This method has the thread do work until its burst time is finised
      *
@@ -141,7 +142,7 @@ public class TestThread extends Thread {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }//try
-                    workDone++;
+                    workDone++; 
                     while (sleeping){ 
                         wait(); 
                         sleeping = false; 

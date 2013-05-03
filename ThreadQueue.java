@@ -133,9 +133,7 @@ public class ThreadQueue extends Thread {
 
                     if (currentThread.isDone()) {
                         System.out.println ("Completing " + currentThread.toString()); 
-                        TestThread temp = new TestThread (currentThread.number() + 1);
-                        queue.add(temp); 
-                        temp.start();
+                        
                     } else { 
                         queue.add(currentThread);
                     }

@@ -21,6 +21,8 @@ public class Scheduler extends Thread {
     private ThreadQueue queue_1;
     private ThreadQueue queue_2;
     private int timeSlice;
+    private int totalCount; 
+    private int currentThreadNumber; 
     private int count_0;
     private int count_1;
     private int count_2;
@@ -39,6 +41,8 @@ public class Scheduler extends Thread {
         queue_1.start(); 
         queue_2.start(); 
         sleeping = false; 
+        totalCount = 0; 
+        currentThreadNumber = 0; 
     }//Scheduler
 
     public Scheduler(int quantum) {
@@ -50,14 +54,32 @@ public class Scheduler extends Thread {
         queue_1.start(); 
         queue_2.start(); 
         sleeping = false;
+        totalCount = 0; 
+        currentThreadNumber = 0; 
     }//Scheduler
+    
+    public synchronized void reduceThreadCount(){ 
+        totalCount--; 
+    }
 
     /**
      * adds a thread to the queue
      * @return void
      */
-    public void addThread(int queue, TestThread t) throws InterruptedException {
-        switch(queue) {
+    public void addThread(TestThread t) throws InterruptedException {
+        totalCount++; 
+        currentThreadNumber++; 
+        int bt = t.burstTime(); 
+        int select; 
+        if (bt < 750){ 
+            select = 0; 
+        } else if (bt < 1250){ 
+            select = 1; 
+        } else { 
+            select = 2; 
+        }
+        
+        switch(select) {
             case 0:
                 queue_0.add(t);
                 break;
@@ -68,7 +90,7 @@ public class Scheduler extends Thread {
                 queue_2.add(t);
                 break;
             default:
-                System.err.println("Invalid queue number " + queue);
+                System.err.println("Invalid queue number " + select);
         }//switch
     }//addThread
 
@@ -125,6 +147,16 @@ public class Scheduler extends Thread {
                 
                 
                 schedulerSleep();
+                
+                if (totalCount < 6){
+                    TestThread toAdd = new TestThread(currentThreadNumber + 1); 
+                    toAdd.start(); 
+                    try {
+                        this.addThread(toAdd);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Scheduler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
 
             } catch (NullPointerException e3) { 
                 e3.printStackTrace();
