@@ -28,15 +28,15 @@ public class TestScheduler {
 
         TestThread t1 = new TestThread(1); 
         t1.start(); 
-        CPUScheduler.addThread(0, t1);
+        CPUScheduler.addThread(t1);
 
         TestThread t2 = new TestThread(2);
         t2.start(); 
-        CPUScheduler.addThread(1, t2);
+        CPUScheduler.addThread(t2);
 
         TestThread t3 = new TestThread(3);
-        t3.start(); 
-        CPUScheduler.addThread(2, t3);
+        t3.start();
+        CPUScheduler.addThread(t3);
 
         CPUScheduler.start();
     }
